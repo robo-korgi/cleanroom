@@ -4,5 +4,6 @@ Load and use the following context files:
 - llm/cleanroom-llm.md
 - llm/personas/persona.architect.md
 - llm/personas/persona.spec-writer.md
+- llm/personas/persona.designer.md
 - llm/personas/persona.developer.md
 - llm/personas/persona.qa.md
