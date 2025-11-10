@@ -1,4 +1,4 @@
-# ✨ Cleanroom
+# ✨ Cleanroom 
 ### Opinionated App Scaffolding
 
 Cleanroom is scaffolding for rapid app development for web, desktop, and mobile. Its core functionality is a starter app scaffolding for a SPA monorepo webapp built on Next/Supabase in Docker for Vercel deployment and Playwright tests. It supports full cross-platform development using Tauri for desktop apps and Capacitor for mobile apps. The Cleanroom CLI lets you fire up as many or as few of the features you need using simple checkbox options.
