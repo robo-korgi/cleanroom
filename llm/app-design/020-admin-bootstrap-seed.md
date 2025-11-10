@@ -1,4 +1,4 @@
-# 017 — Admin bootstrap seed (privileged creation, no public path)
+# 020 — Admin bootstrap seed (privileged creation, no public path)
 
 ## Objective
 Create exactly one **admin** user intentionally via a privileged, non-public path. No scripts included in this doc; instruction-only.
@@ -32,5 +32,5 @@ Create exactly one **admin** user intentionally via a privileged, non-public pat
 - Access controls should check `role` centrally (middleware/server actions).
 
 ## Authorization guard cross‑reference
-- The bootstrap admin creation flow is a **privileged operation** and must be protected by the centralized guard from **017**: `requireRole(session, 'admin')`, or executed via an operator-only path.
+- The bootstrap admin creation flow is a **privileged operation** and must be protected by the centralized guard from **021**: `requireRole(session, 'admin')`, or executed via an operator-only path.
 - Never expose a public HTTP endpoint that assigns `role='admin'` without the guard.

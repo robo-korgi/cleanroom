@@ -61,10 +61,10 @@ export default function Home() {
 Re-run tests against prod/preview/docker until GREEN. The preview target always uses the stable alias.
 
 ## Note for email verification tests (preview target)
-When end-to-end tests involve clicking verification links, prefer the **dev-only JSON endpoint** described in step 014 (e.g., `/__test__/last-verification.json`) to retrieve the latest `verifyUrl`, instead of scraping any mailbox UI. This keeps tests stable and environment-agnostic. Ensure these endpoints are **disabled in production**.
+When end-to-end tests involve clicking verification links, prefer the **dev-only JSON endpoint** described in step 019 (e.g., `/__test__/last-verification.json`) to retrieve the latest `verifyUrl`, instead of scraping any mailbox UI. This keeps tests stable and environment-agnostic. Ensure these endpoints are **disabled in production**.
 
 ## Note: add `/admin` access checks when admin exists
-Once the bootstrap admin from step 015 is present, extend e2e to assert:
+Once the bootstrap admin from step 020 is present, extend e2e to assert:
 - Unauthenticated GET `/admin` → 401 (or login redirect if that is the chosen behavior).
 - Authenticated `user` → 403.
 - Authenticated `admin` → 200.

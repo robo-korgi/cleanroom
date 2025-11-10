@@ -1,7 +1,7 @@
-# 018 — Admin routes reserved namespace (`/admin/**`)
+# 022 — Admin routes reserved namespace (`/admin/**`)
 
 ## Objective
-Reserve `/admin/**` now and enforce admin-only access using the centralized guard from **017**. No admin UI yet.
+Reserve `/admin/**` now and enforce admin-only access using the centralized guard from **021**. No admin UI yet.
 
 ## Scope
 - Next.js App Router
@@ -18,7 +18,7 @@ Reserve `/admin/**` now and enforce admin-only access using the centralized guar
 - Namespace root: `app/admin/`
 
 ## Guard
-- Use the centralized `requireRole(session, 'admin')` from **017**.
+- Use the centralized `requireRole(session, 'admin') from **020**.
 - Session is loaded server-side before rendering or responding.
 
 ## Minimal shape (App Router)
@@ -43,9 +43,9 @@ Reserve `/admin/**` now and enforce admin-only access using the centralized guar
 - Authenticated `admin` GET `/admin` → 200.
 
 ## Cross-references
-- **018-authorization-guards.md** — guard contract and semantics.
-- **011-drizzle-db-test-first.md** — role enum + default role.
-- **016-admin-bootstrap-seed.md** — initial admin creation (privileged path).
+- **021-authorization-guards.md** — guard contract and semantics.
+- **016-drizzle-db-test-first.md** — role enum + default role.
+- **020-admin-bootstrap-seed.md** — initial admin creation (privileged path).
 
 ## Notes
 - Keep `/admin/**` out of site navigation for non-admins.

@@ -1,8 +1,8 @@
-# 022 — Seed Users: TV Characters (TEST FIRST)
+# 025 — Seed Users: TV Characters (TEST FIRST)
 
 Meta:
 - created: 2025-11-10T06:14:28.693370Z
-- depends-on: 021-user-profile-dynamic-schema.md
+- depends-on: 023-user-profile-dynamic-schema.md
 
 ## Goal
 Provide rich test data by seeding users for **all major characters** (excluding very minor) from:

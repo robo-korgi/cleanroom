@@ -1,4 +1,4 @@
-# 018 — Authorization guards (requireRole)
+# 021 — Authorization guards (requireRole)
 
 ## Objective
 Centralize server-side authorization so all privileged code paths use the same guard. Pattern: `requireRole(session, role)`.
@@ -65,6 +65,6 @@ export function requireRole(session: Session | null | undefined, required: Role)
 - Non-mutating public routes unaffected.
 
 ## Notes
-- Session remains server-side (per 011/014). Do not trust client role.
+- Session remains server-side (per 012/019). Do not trust client role.
 - On role changes, invalidate sessions so `requireRole` uses current data.
 - Future roles can be added by extending `Role` and `ranks` mapping.

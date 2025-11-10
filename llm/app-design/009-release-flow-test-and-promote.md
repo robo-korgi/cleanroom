@@ -26,7 +26,7 @@ This keeps preview testing consistent without auto-promotion or automation.
 
 ## Authorization guard cross‑reference
 If deployment promotion or rollback actions are ever exposed via HTTP or server actions,
-they must be protected with the centralized guard from **017**:
+they must be protected with the centralized guard from **021**:
 
 ```
 requireRole(session, 'admin')

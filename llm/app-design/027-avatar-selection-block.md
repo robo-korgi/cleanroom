@@ -1,0 +1,432 @@
+# 027 — Avatar Selection Block (TEST FIRST)
+
+Meta:
+- created: 2025-11-10
+- depends-on: 023 (CLI create new), 024 (user profile schema), 026 (user CRUD)
+- scope: Dynamic avatar selection based on bootstrap choice
+
+## Objective
+Build an avatar selection block that adapts its UI based on the **avatar strategy** chosen during CLI bootstrap (from 022). Integrate this block into user edit pages (`/account` and `/admin/users/[uuid]/edit`).
+
+## Avatar Strategies (from 022-cli-create-new.md)
+
+The avatar strategy is chosen at bootstrap and stored in app config. The block renders different UI based on the selected strategy:
+
+### 1. `first_initial` — Generated SVG
+- Auto-generates avatar from user's display name first letter
+- Shows current avatar preview (e.g., "M" in a circle)
+- User **cannot** change it via selection (auto-derived from name)
+- Updates automatically when display name changes
+- SVG with customizable background colors (rotate through palette)
+
+### 2. `default_image` — Single Repo Asset
+- Shows a single default avatar image (e.g., `/public/avatars/default.png`)
+- User **cannot** select different avatar
+- All users share same default image
+- Simple, minimal setup
+
+### 3. `selectable_images` — Preset Image Gallery
+- Shows grid of preset avatar images (e.g., 12-24 options)
+- User selects one from the gallery
+- Images stored in `/public/avatars/preset-*.png`
+- Grid layout using shadcn components
+
+### 4. `selectable_emojis` — Emoji Picker
+- Shows emoji picker interface
+- User selects an emoji as their avatar
+- Emoji rendered as large text or emoji image
+- Use shadcn Popover + emoji data
+
+## Technology
+
+### shadcn Components
+```bash
+npx shadcn@latest add avatar radio-group popover
+```
+
+### Additional Dependencies
+- For emoji picker: `emoji-mart` or similar (optional, can use simple emoji list)
+
+## Avatar Selection Block Structure
+
+### Block: `AvatarSelectionBlock`
+**data-testid:** `blk-avatar-selection`
+
+```typescript
+interface AvatarSelectionBlockProps {
+  currentAvatarUrl?: string;
+  displayName: string;
+  strategy: 'first_initial' | 'default_image' | 'selectable_images' | 'selectable_emojis';
+  onSelect: (avatarUrl: string) => void;
+}
+```
+
+### UI Per Strategy
+
+#### first_initial
+```tsx
+<div data-testid="blk-avatar-selection">
+  <Label>Avatar</Label>
+  <p className="text-sm text-muted-foreground">
+    Auto-generated from your name
+  </p>
+  <Avatar data-testid="avatar-preview-initial">
+    <AvatarFallback>{getInitial(displayName)}</AvatarFallback>
+  </Avatar>
+  <p className="text-xs text-muted-foreground">
+    Updates automatically when you change your name
+  </p>
+</div>
+```
+
+#### default_image
+```tsx
+<div data-testid="blk-avatar-selection">
+  <Label>Avatar</Label>
+  <Avatar data-testid="avatar-preview-default">
+    <AvatarImage src="/avatars/default.png" />
+  </Avatar>
+</div>
+```
+
+#### selectable_images
+```tsx
+<div data-testid="blk-avatar-selection">
+  <Label>Avatar</Label>
+  <p className="text-sm text-muted-foreground">
+    Choose from preset avatars
+  </p>
+
+  <RadioGroup
+    value={currentAvatarUrl}
+    onValueChange={onSelect}
+    className="grid grid-cols-4 md:grid-cols-6 gap-4"
+  >
+    {presetAvatars.map(avatar => (
+      <div key={avatar.url} className="flex flex-col items-center gap-2">
+        <RadioGroupItem value={avatar.url} id={avatar.id} className="sr-only" />
+        <Label
+          htmlFor={avatar.id}
+          className="cursor-pointer"
+          data-testid={`avatar-option-${avatar.id}`}
+        >
+          <Avatar className={cn(
+            "ring-2 ring-offset-2",
+            currentAvatarUrl === avatar.url && "ring-primary"
+          )}>
+            <AvatarImage src={avatar.url} alt={avatar.label} />
+          </Avatar>
+        </Label>
+      </div>
+    ))}
+  </RadioGroup>
+</div>
+```
+
+#### selectable_emojis
+```tsx
+<div data-testid="blk-avatar-selection">
+  <Label>Avatar</Label>
+  <p className="text-sm text-muted-foreground">
+    Choose an emoji
+  </p>
+
+  <div className="flex items-center gap-4">
+    <Avatar data-testid="avatar-preview-emoji">
+      <AvatarFallback className="text-2xl">
+        {currentEmoji || '😀'}
+      </AvatarFallback>
+    </Avatar>
+
+    <Popover>
+      <PopoverTrigger asChild>
+        <Button variant="outline" data-testid="emoji-picker-trigger">
+          Choose Emoji
+        </Button>
+      </PopoverTrigger>
+      <PopoverContent className="w-80" data-testid="emoji-picker-popover">
+        <div className="grid grid-cols-8 gap-2">
+          {emojis.map(emoji => (
+            <Button
+              key={emoji}
+              variant="ghost"
+              className="h-10 w-10 p-0 text-xl"
+              onClick={() => onSelect(emoji)}
+              data-testid={`emoji-option-${emoji}`}
+            >
+              {emoji}
+            </Button>
+          ))}
+        </div>
+      </PopoverContent>
+    </Popover>
+  </div>
+</div>
+```
+
+## Data Model
+
+### App Config (set during bootstrap)
+```typescript
+// config/avatarStrategy.ts (generated by CLI)
+export const avatarStrategy = 'selectable_emojis' as const;
+
+// For selectable_images
+export const presetAvatars = [
+  { id: 'avatar-1', url: '/avatars/preset-1.png', label: 'Avatar 1' },
+  { id: 'avatar-2', url: '/avatars/preset-2.png', label: 'Avatar 2' },
+  // ... more presets
+];
+
+// For selectable_emojis
+export const availableEmojis = [
+  '😀', '😃', '😄', '😁', '😆', '😅', '🤣', '😂',
+  '🙂', '🙃', '😉', '😊', '😇', '🥰', '😍', '🤩',
+  // ... more emojis
+];
+```
+
+### User Schema
+```typescript
+// users.avatar_url stores:
+// - first_initial: null (generated on-the-fly)
+// - default_image: '/avatars/default.png' or null
+// - selectable_images: '/avatars/preset-X.png'
+// - selectable_emojis: emoji character(s) as string
+```
+
+## Integration with User Edit Pages
+
+### `/account` (Self-Edit)
+Add avatar selection block above or near profile form:
+
+```tsx
+<form>
+  <AvatarSelectionBlock
+    currentAvatarUrl={user.avatar_url}
+    displayName={user.display_name}
+    strategy={avatarStrategy}
+    onSelect={(url) => updateAvatarUrl(url)}
+  />
+
+  {/* Existing form fields */}
+  <Input label="Display Name" ... />
+  <Input label="Email" ... />
+
+  <Button type="submit">Save Changes</Button>
+</form>
+```
+
+### `/admin/users/[uuid]/edit` (Admin Edit)
+Same integration as self-edit page.
+
+## Playwright Tests
+
+### @smoke
+```typescript
+test('avatar selection block renders based on strategy', async ({ page }) => {
+  // Mock strategy config (or use test fixture)
+  await page.goto('/account');
+
+  const avatarBlock = page.getByTestId('blk-avatar-selection');
+  await expect(avatarBlock).toBeVisible();
+});
+```
+
+### @auth + strategy-specific
+```typescript
+test('first_initial: shows auto-generated initial', async ({ page }) => {
+  // Set strategy to first_initial
+  await loginAs(page, { displayName: 'Michael Scott' });
+  await page.goto('/account');
+
+  const preview = page.getByTestId('avatar-preview-initial');
+  await expect(preview).toContainText('M');
+});
+
+test('selectable_images: can select preset avatar', async ({ page }) => {
+  // Set strategy to selectable_images
+  await loginAs(page, { displayName: 'Jim Halpert' });
+  await page.goto('/account');
+
+  await page.getByTestId('avatar-option-avatar-2').click();
+  await page.getByRole('button', { name: /save/i }).click();
+
+  // Verify selection persisted
+  await page.reload();
+  const selected = page.getByTestId('avatar-option-avatar-2');
+  await expect(selected).toHaveClass(/ring-primary/);
+});
+
+test('selectable_emojis: can select emoji', async ({ page }) => {
+  // Set strategy to selectable_emojis
+  await loginAs(page, { displayName: 'Pam Beesly' });
+  await page.goto('/account');
+
+  await page.getByTestId('emoji-picker-trigger').click();
+  await page.getByTestId('emoji-option-😊').click();
+  await page.getByRole('button', { name: /save/i }).click();
+
+  // Verify emoji persisted
+  await page.reload();
+  const preview = page.getByTestId('avatar-preview-emoji');
+  await expect(preview).toContainText('😊');
+});
+
+test('default_image: shows default avatar, no selection UI', async ({ page }) => {
+  // Set strategy to default_image
+  await loginAs(page, { displayName: 'Dwight Schrute' });
+  await page.goto('/account');
+
+  const preview = page.getByTestId('avatar-preview-default');
+  await expect(preview).toBeVisible();
+
+  // No selection controls
+  await expect(page.getByTestId('avatar-option-avatar-1')).not.toBeVisible();
+  await expect(page.getByTestId('emoji-picker-trigger')).not.toBeVisible();
+});
+```
+
+### @admin
+```typescript
+test('admin: can change user avatar via selection block', async ({ page }) => {
+  await loginAsAdmin(page);
+  await page.goto('/admin/users/some-uuid/edit');
+
+  const avatarBlock = page.getByTestId('blk-avatar-selection');
+  await expect(avatarBlock).toBeVisible();
+
+  // Change avatar (strategy-dependent)
+  // Save and verify
+});
+```
+
+## Avatar Rendering Throughout App
+
+### Avatar Display Component
+Create a shared `<UserAvatar>` component that handles all strategies:
+
+```typescript
+interface UserAvatarProps {
+  user: {
+    avatar_url?: string;
+    display_name: string;
+  };
+  size?: 'sm' | 'md' | 'lg';
+}
+
+function UserAvatar({ user, size = 'md' }: UserAvatarProps) {
+  const strategy = avatarStrategy; // from config
+
+  if (strategy === 'first_initial') {
+    return (
+      <Avatar size={size}>
+        <AvatarFallback>{getInitial(user.display_name)}</AvatarFallback>
+      </Avatar>
+    );
+  }
+
+  if (strategy === 'selectable_emojis' && user.avatar_url) {
+    return (
+      <Avatar size={size}>
+        <AvatarFallback className="text-xl">{user.avatar_url}</AvatarFallback>
+      </Avatar>
+    );
+  }
+
+  // default_image or selectable_images
+  return (
+    <Avatar size={size}>
+      <AvatarImage src={user.avatar_url || '/avatars/default.png'} />
+      <AvatarFallback>{getInitial(user.display_name)}</AvatarFallback>
+    </Avatar>
+  );
+}
+```
+
+Use this component everywhere avatars appear:
+- Nav avatar menu (013)
+- User profile card (025)
+- User lists (025)
+- Admin user tables (025)
+
+## Server Actions
+
+### Update Avatar
+```typescript
+async function updateUserAvatar(userId: string, avatarUrl: string) {
+  const strategy = avatarStrategy;
+
+  // Validate based on strategy
+  if (strategy === 'selectable_images') {
+    if (!presetAvatars.some(a => a.url === avatarUrl)) {
+      throw new Error('Invalid preset avatar');
+    }
+  }
+
+  if (strategy === 'selectable_emojis') {
+    if (!availableEmojis.includes(avatarUrl)) {
+      throw new Error('Invalid emoji');
+    }
+  }
+
+  // first_initial doesn't allow manual updates
+  if (strategy === 'first_initial') {
+    throw new Error('Cannot manually set avatar with first_initial strategy');
+  }
+
+  // Update user.avatar_url
+  await db.update(users)
+    .set({ avatar_url: avatarUrl })
+    .where(eq(users.id, userId));
+}
+```
+
+## CLI Bootstrap Integration
+
+During `cleanroom new`, add prompt:
+
+```typescript
+{
+  type: 'select',
+  name: 'avatarStrategy',
+  message: 'Choose avatar strategy:',
+  choices: [
+    { title: 'First Initial (auto-generated SVG)', value: 'first_initial' },
+    { title: 'Default Image (single shared avatar)', value: 'default_image' },
+    { title: 'Selectable Images (preset gallery)', value: 'selectable_images' },
+    { title: 'Selectable Emojis (emoji picker)', value: 'selectable_emojis' },
+  ],
+}
+```
+
+Generate `config/avatarStrategy.ts` based on choice.
+
+If `selectable_images`, also prompt:
+- Number of preset avatars (default: 12)
+- Auto-generate placeholder images or provide custom set
+
+## Optional: Combine with Avatar Upload (027)
+
+For apps that want both preset selection AND custom upload:
+1. Add toggle in avatar block: "Choose preset" vs "Upload custom"
+2. Show avatar selection block OR upload block based on toggle
+3. Custom uploads override preset selection
+4. Store custom upload URLs in same `avatar_url` field
+
+## Accessibility
+
+- All avatar options have proper labels
+- Radio groups properly associated
+- Emoji picker keyboard navigable
+- Screen reader announces current avatar selection
+- Color contrast meets WCAG AA for fallback initials
+
+## Exit Criteria
+
+- All 4 avatar strategies render correctly in avatar selection block
+- Block integrates cleanly into `/account` and admin edit pages
+- Tests pass for each strategy across all environments
+- Avatar selections persist correctly to database
+- Shared `<UserAvatar>` component renders correctly everywhere
+- CLI bootstrap generates correct config based on choice

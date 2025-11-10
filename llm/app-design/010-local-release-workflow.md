@@ -1,4 +1,4 @@
-# 016 — Local Release Workflow (No CI)
+# 010 — Local Release Workflow (No CI)
 
 ## Objective
 Release new code safely without GitHub Actions or CI pipelines, using:

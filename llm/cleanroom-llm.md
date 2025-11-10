@@ -15,10 +15,11 @@ This document ensures consistent reasoning and code generation.
 | Area | Technology | Notes |
 |------|------------|-------|
 | Web UI | Next.js 14+ (App Router) | Uses RSC + Server Actions |
+| Components | shadcn/ui | Built on Radix UI + Tailwind; copy-paste approach |
 | Auth | Supabase Auth | Uses HTTP-only cookies, no custom JWTs |
 | Database | Supabase Postgres | Access via Drizzle ORM |
 | Migrations | drizzle-kit | Schema lives in /packages/db |
-| UI | Tailwind + Radix Primitives | Atomic UI → Blocks → Pages |
+| UI Structure | Components → Blocks → Pages | shadcn components → composite blocks → full pages |
 | Dev | Docker Compose | Local env parity |
 | Deploy | Vercel (web) + Supabase (db/storage) | Minimal ops |
 | Desktop | Tauri | Loads same UI + optional native calls |
@@ -43,11 +44,11 @@ cleanroom/
 ```
 
 ## UI Layering Definitions
-- **Components**: Small reusable UI parts (buttons, inputs).
-- **Blocks**: Larger functional sections (headers, account forms, feed lists).
+- **Components**: Small reusable UI parts from **shadcn/ui** (buttons, inputs, cards, dialogs, etc.). Use `npx shadcn@latest add <component>` to add components.
+- **Blocks**: Larger functional sections composed from shadcn components (headers, account forms, feed lists).
 - **Pages**: Full routes with data wiring + block orchestration.
 
-LLMs should generate UI following this hierarchy.
+LLMs should generate UI following this hierarchy and always use shadcn/ui components as the foundation.
 
 ## Auth Rules
 - Always rely on Supabase Auth.

@@ -1,4 +1,4 @@
-# 010 — API health route — TEST FIRST
+# 011 — API health route — TEST FIRST
 
 ## Objective
 Add failing test for `/api/healthz`. Initial contract:

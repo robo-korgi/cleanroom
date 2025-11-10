@@ -1,4 +1,4 @@
-# 013 — `/api/healthz` + DB status — TEST FIRST
+# 017 — `/api/healthz` + DB status — TEST FIRST
 
 ## Objective
 Upgrade `/api/healthz` to include DB status after DB tests pass. New contract:

@@ -1,4 +1,4 @@
-# 011 — Nav + Auth UI State (TEST FIRST)
+# 012 — Nav + Auth UI State (TEST FIRST)
 
 Meta:
 - updated: 2025-11-10T05:46:04.563076Z

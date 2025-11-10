@@ -1,8 +1,8 @@
-# 024 — User Avatar Menu Block (TEST FIRST)
+# 013 — User Avatar Menu Block (TEST FIRST)
 
 Meta:
 - created: 2025-11-10T06:35:22.246293Z
-- depends-on: 011 (nav), 018 (guards)
+- depends-on: 012 (nav), 021 (guards)
 
 ## Block
 Clickable avatar that reveals a persistent hoverable menu.

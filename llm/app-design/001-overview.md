@@ -1,4 +1,4 @@
-# 000 — Cleanroom Setup Overview (Spec‑First Pipeline)
+# 001 — Cleanroom Setup Overview (Spec‑First Pipeline)
 
 **Goal:** Stand up the foundation for fast shipping with two environments:
 - **local-docker** (canonical for development & tests)

@@ -1,8 +1,8 @@
-# 021 — User Profile: Dynamic Schema Strategy (TEST FIRST)
+# 024 — User Profile: Dynamic Schema Strategy (TEST FIRST)
 
 Meta:
 - created: 2025-11-10T05:56:56.313552Z
-- depends-on: 020-cli-create-new.md
+- depends-on: 022-cli-create-new.md
 - db: Drizzle + Postgres
 - goal: allow per-app user properties chosen at bootstrap to flow into code safely
 

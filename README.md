@@ -24,6 +24,7 @@ Cleanroom contains libraries at various levels of detail:
 | Layer | Technology | Purpose |
 |------|------------|---------|
 | Web Frontend | **Next.js (React, App Router)** | Main UI, routes, server actions |
+| Components | **shadcn/ui** (Radix + Tailwind) | Accessible, customizable UI components |
 | Auth | **Supabase Auth** | Email login, OAuth, session storage |
 | Database | **Supabase Postgres** with Drizzle ORM | Structured data w/ migrations |
 | API / Server Logic | **Next.js Server Actions / Route Handlers** | Backend functionality colocated with UI |

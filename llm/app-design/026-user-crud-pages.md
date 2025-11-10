@@ -1,8 +1,8 @@
-# 023 — User CRUD Pages (TEST FIRST)
+# 026 — User CRUD Pages (TEST FIRST)
 
 Meta:
 - created: 2025-11-10T06:35:22.246293Z
-- depends-on: 005, 018, 020, 021, 022
+- depends-on: 005, 021, 023, 024, 025
 - matrix: local-docker, vercel-preview, vercel-prod
 
 ## Routes & Permissions
@@ -12,7 +12,7 @@ Meta:
 - `/admin/users/[uuid]/edit` — **admin** edit
 - `/admin/users/new` — **admin** create
 
-Auth/roles per `018-authorization-guards.md`. Users are referenced by **public UUID** from `021`.
+Auth/roles per `021-authorization-guards.md`. Users are referenced by **public UUID** from `024`.
 
 ## Forms — Fields
 - Core fields: displayName, email (admin only edit), avatarUrl (via upload later), locale, timeZone
@@ -48,4 +48,4 @@ Tags: `@smoke`, `@auth`, `@admin`
 - Large result sets → pagination UI stable across pages
 
 ## Exit Criteria
-- All tests pass across environments with seeds from `022`.
+- All tests pass across environments with seeds from `024`.
