@@ -7,8 +7,8 @@ export default function SimpleHero() {
             Cleanroom
           </span>
           <br />
-          <span className="font-bold tracking-[-0.04em]">LESS BOILERPLATE</span>
-          <br />& <span className="font-bold tracking-[-0.04em]">MORE BOIL 🔥</span>
+          <span className="font-sans font-bold tracking-[-0.04em]">LESS BOILERPLATE</span>
+          <br />& <span className="font-sans font-bold tracking-[-0.04em]">MORE BOIL 🔥</span>
         </h1>
       </div>
     </div>
