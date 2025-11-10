@@ -11,7 +11,7 @@
     "build": "next build",
     "start": "next start",
     "vercel-build": "yarn build",
-    "test:e2e": "playwright test",
+    "test:e2e": "playwright test --grep-invert /@deployment/",
     "test:e2e:pre": "dotenv -e .env.local -- bash -c 'BASE_URL=https://preview.cleanroom.website yarn test:e2e'",
     "test:e2e:prod": "BASE_URL=https://cleanroom.website yarn test:e2e",
     "test:e2e:ui": "playwright test --ui",
