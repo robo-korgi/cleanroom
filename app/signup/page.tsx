@@ -43,8 +43,7 @@ export default function SignUpPage() {
       setLoading(false)
     } else {
       // Sign up successful - automatically signs in with Supabase
-      router.push('/')
-      router.refresh()
+      window.location.href = '/'
     }
   }
 
