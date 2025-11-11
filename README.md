@@ -20,6 +20,7 @@ Cleanroom contains libraries at various levels of detail:
 - ✅ Step 007: Docker development environment + Playwright test matrix
 - ✅ Step 008-010: Test-gated deployment workflow with auto-rollback
 - ✅ Step 011: Health check API endpoint
+- ✅ Step 012: Auth-aware navigation UI (logged-out state)
 
 **Live Deployments:**
 - Production: https://cleanroom.website
