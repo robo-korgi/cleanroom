@@ -37,8 +37,7 @@ test.describe('Navigation Auth States', () => {
     await expect(logo).toHaveAttribute('href', '/');
   });
 
-  // Note: Auth flow tests (@auth tags) will be implemented once auth is functional
-  // These are placeholders for the test structure:
+  // Note: Auth flow tests (@auth tags) require working Supabase auth
 
   test.skip('@auth: After login, nav shows Account + Sign Out', async ({ page }) => {
     // TODO: Implement once Supabase auth is configured
@@ -71,5 +70,93 @@ test.describe('Navigation Auth States', () => {
     // 2. Verify nav-admin link is visible
     // 3. Log out and log in as regular user
     // 4. Verify nav-admin link is not visible
+  });
+});
+
+test.describe('Avatar Menu (Step 013)', () => {
+  test('@smoke: Avatar menu not visible when logged out', async ({ page }) => {
+    await page.goto('/');
+
+    // Avatar menu should not be visible when logged out
+    await expect(page.getByTestId('nav-avatar')).not.toBeVisible();
+    await expect(page.getByTestId('nav-user-menu')).not.toBeVisible();
+  });
+
+  test.skip('@auth: Avatar menu visible when logged in', async ({ page }) => {
+    // TODO: Implement once auth helpers are ready
+    // 1. Log in
+    // 2. Verify nav-avatar is visible
+    // 3. Verify nav-user-menu is not visible initially
+  });
+
+  test.skip('@auth: Clicking avatar toggles menu open/closed', async ({ page }) => {
+    // TODO: Implement once auth helpers are ready
+    // 1. Log in
+    // 2. Click avatar
+    // 3. Verify menu becomes visible
+    // 4. Click avatar again
+    // 5. Verify menu closes
+  });
+
+  test.skip('@auth: Avatar menu contains Profile, Settings, Sign Out', async ({ page }) => {
+    // TODO: Implement once auth helpers are ready
+    // 1. Log in
+    // 2. Click avatar to open menu
+    // 3. Verify menu-profile link is visible
+    // 4. Verify menu-settings link is visible
+    // 5. Verify menu-signout button is visible
+  });
+
+  test.skip('@auth: Clicking Profile navigates to /u/{id}', async ({ page }) => {
+    // TODO: Implement once auth helpers and profile routes are ready
+    // 1. Log in
+    // 2. Click avatar to open menu
+    // 3. Click Profile
+    // 4. Verify navigation to /u/{public_uuid}
+    // 5. Verify menu closes
+  });
+
+  test.skip('@auth: Clicking Settings navigates to /account', async ({ page }) => {
+    // TODO: Implement once auth helpers are ready
+    // 1. Log in
+    // 2. Click avatar to open menu
+    // 3. Click Settings
+    // 4. Verify navigation to /account
+    // 5. Verify menu closes
+  });
+
+  test.skip('@auth: Clicking Sign Out logs user out', async ({ page }) => {
+    // TODO: Implement once auth helpers are ready
+    // 1. Log in
+    // 2. Click avatar to open menu
+    // 3. Click Sign Out
+    // 4. Verify redirect to /
+    // 5. Verify logged-out nav state
+    // 6. Verify menu closes
+  });
+
+  test.skip('@auth: Menu closes when clicking outside', async ({ page }) => {
+    // TODO: Implement once auth helpers are ready
+    // 1. Log in
+    // 2. Click avatar to open menu
+    // 3. Click somewhere outside the menu
+    // 4. Verify menu closes
+  });
+
+  test.skip('@auth: ESC key closes menu', async ({ page }) => {
+    // TODO: Implement once auth helpers are ready
+    // 1. Log in
+    // 2. Click avatar to open menu
+    // 3. Press ESC key
+    // 4. Verify menu closes
+  });
+
+  test.skip('@auth: Keyboard navigation works in menu', async ({ page }) => {
+    // TODO: Implement once auth helpers are ready
+    // 1. Log in
+    // 2. Press ENTER/SPACE on avatar to open menu
+    // 3. Use arrow keys to navigate menu items
+    // 4. Verify focus moves correctly
+    // 5. Press ENTER on a menu item to activate it
   });
 });

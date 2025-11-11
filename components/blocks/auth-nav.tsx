@@ -5,6 +5,7 @@ import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { createClient } from '@/lib/supabase/client';
 import type { User } from '@supabase/supabase-js';
+import AvatarMenu from './avatar-menu';
 
 export default function AuthNav() {
   const [user, setUser] = useState<User | null>(null);
@@ -90,23 +91,6 @@ export default function AuthNav() {
         ) : (
           <>
             {/* Logged-in state */}
-            <div className="flex items-center gap-2">
-              {/* Account email */}
-              <span
-                data-testid="nav-account-email"
-                className="text-sm text-zinc-700"
-              >
-                {userEmail}
-              </span>
-              {/* Avatar fallback */}
-              <div
-                data-testid="nav-account-avatar"
-                className="w-8 h-8 rounded-full bg-zinc-300 flex items-center justify-center text-zinc-600 text-xs"
-              >
-                {userEmail ? userEmail.charAt(0).toUpperCase() : 'U'}
-              </div>
-            </div>
-
             {/* Admin link (only for admins) */}
             {isAdmin && (
               <Link
@@ -118,14 +102,12 @@ export default function AuthNav() {
               </Link>
             )}
 
-            {/* Sign Out button */}
-            <button
-              data-testid="nav-signout"
-              onClick={handleSignOut}
-              className="text-sm text-zinc-700 hover:text-zinc-900 transition-colors cursor-pointer"
-            >
-              Sign Out
-            </button>
+            {/* Avatar Menu */}
+            <AvatarMenu
+              userEmail={userEmail}
+              userId={user?.id}
+              onSignOut={handleSignOut}
+            />
           </>
         )}
       </div>
