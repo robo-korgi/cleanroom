@@ -5,11 +5,21 @@ import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { createClient } from '@/lib/supabase/client';
 import type { User } from '@supabase/supabase-js';
+import { Menu } from 'lucide-react';
+import { Button } from '@/components/ui/button';
+import {
+  Sheet,
+  SheetContent,
+  SheetHeader,
+  SheetTitle,
+} from '@/components/ui/sheet';
 import AvatarMenu from './avatar-menu';
+import { galleryLinks, publicAuthLinks, adminLinks, type NavLink } from '@/components/nav/nav-links';
 
 export default function AuthNav() {
   const [user, setUser] = useState<User | null>(null);
   const [loading, setLoading] = useState(true);
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const router = useRouter();
   const supabase = createClient();
 
@@ -41,9 +51,21 @@ export default function AuthNav() {
   // TODO: Implement admin role checking with Supabase user metadata or database
   const isAdmin = false;
 
+  const renderNavLink = (link: NavLink, closeMenu?: () => void) => (
+    <Link
+      key={link.href}
+      href={link.href}
+      data-testid={link.testId}
+      className="text-sm text-zinc-700 hover:text-zinc-900 transition-colors cursor-pointer"
+      onClick={closeMenu}
+    >
+      {link.label}
+    </Link>
+  );
+
   return (
     <nav data-testid="nav" className="w-full flex items-center justify-between px-8 py-6">
-      {/* Logo / Home */}
+      {/* Logo */}
       <Link
         href="/"
         data-testid="nav-logo"
@@ -52,54 +74,21 @@ export default function AuthNav() {
         ✨
       </Link>
 
-      {/* Navigation Links */}
-      <div className="flex gap-6 items-center">
-        {/* Always visible gallery links */}
-        <Link
-          href="/components"
-          className="text-sm text-zinc-700 hover:text-zinc-900 transition-colors cursor-pointer"
-        >
-          Components
-        </Link>
-        <Link
-          href="/blocks"
-          className="text-sm text-zinc-700 hover:text-zinc-900 transition-colors cursor-pointer"
-        >
-          Blocks
-        </Link>
+      {/* Desktop Navigation - hidden on mobile */}
+      <div className="hidden md:flex gap-6 items-center">
+        {/* Gallery links - always visible */}
+        {galleryLinks.map(link => renderNavLink(link))}
 
-        {/* Auth State Navigation */}
+        {/* Auth state navigation */}
         {!isLoggedIn ? (
           <>
-            {/* Logged-out state */}
-            <Link
-              href="/signin"
-              data-testid="nav-signin"
-              className="text-sm text-zinc-700 hover:text-zinc-900 transition-colors cursor-pointer"
-            >
-              Sign In
-            </Link>
-            <Link
-              href="/signup"
-              data-testid="nav-signup"
-              className="text-sm text-zinc-700 hover:text-zinc-900 transition-colors cursor-pointer"
-            >
-              Sign Up
-            </Link>
+            {/* Public auth links */}
+            {publicAuthLinks.map(link => renderNavLink(link))}
           </>
         ) : (
           <>
-            {/* Logged-in state */}
             {/* Admin link (only for admins) */}
-            {isAdmin && (
-              <Link
-                href="/admin"
-                data-testid="nav-admin"
-                className="text-sm text-zinc-700 hover:text-zinc-900 transition-colors cursor-pointer"
-              >
-                Admin
-              </Link>
-            )}
+            {isAdmin && adminLinks.map(link => renderNavLink(link))}
 
             {/* Avatar Menu */}
             <AvatarMenu
@@ -110,6 +99,53 @@ export default function AuthNav() {
           </>
         )}
       </div>
+
+      {/* Mobile Hamburger - hidden on desktop */}
+      <Button
+        variant="ghost"
+        size="icon"
+        className="md:hidden"
+        data-testid="nav-mobile-toggle"
+        onClick={() => setMobileMenuOpen(true)}
+        aria-label="Open navigation menu"
+      >
+        <Menu className="h-6 w-6" />
+      </Button>
+
+      {/* Mobile Sheet */}
+      <Sheet open={mobileMenuOpen} onOpenChange={setMobileMenuOpen}>
+        <SheetContent side="left" data-testid="nav-mobile-drawer">
+          <SheetHeader>
+            <SheetTitle>Cleanroom</SheetTitle>
+          </SheetHeader>
+          <div className="flex flex-col gap-4 mt-6 px-4">
+            {/* Gallery links - always visible */}
+            {galleryLinks.map(link => renderNavLink(link, () => setMobileMenuOpen(false)))}
+
+            {/* Auth state navigation */}
+            {!isLoggedIn ? (
+              <>
+                {/* Public auth links */}
+                {publicAuthLinks.map(link => renderNavLink(link, () => setMobileMenuOpen(false)))}
+              </>
+            ) : (
+              <>
+                {/* Admin link (only for admins) */}
+                {isAdmin && adminLinks.map(link => renderNavLink(link, () => setMobileMenuOpen(false)))}
+
+                {/* Avatar Menu in mobile drawer */}
+                <div className="pt-4 border-t">
+                  <AvatarMenu
+                    userEmail={userEmail}
+                    userId={user?.id}
+                    onSignOut={handleSignOut}
+                  />
+                </div>
+              </>
+            )}
+          </div>
+        </SheetContent>
+      </Sheet>
     </nav>
   );
 }
