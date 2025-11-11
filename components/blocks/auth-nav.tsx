@@ -1,13 +1,45 @@
 'use client';
 
+import { useEffect, useState } from 'react';
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
+import { createClient } from '@/lib/supabase/client';
+import type { User } from '@supabase/supabase-js';
 
 export default function AuthNav() {
-  // TODO: Replace with actual Supabase auth state when implemented
-  // For now, this shows the logged-out state
-  const isLoggedIn = false;
+  const [user, setUser] = useState<User | null>(null);
+  const [loading, setLoading] = useState(true);
+  const router = useRouter();
+  const supabase = createClient();
+
+  useEffect(() => {
+    // Get initial session
+    supabase.auth.getSession().then(({ data: { session } }) => {
+      setUser(session?.user ?? null);
+      setLoading(false);
+    });
+
+    // Listen for auth changes
+    const {
+      data: { subscription },
+    } = supabase.auth.onAuthStateChange((_event, session) => {
+      setUser(session?.user ?? null);
+      router.refresh();
+    });
+
+    return () => subscription.unsubscribe();
+  }, [supabase, router]);
+
+  const handleSignOut = async () => {
+    await supabase.auth.signOut();
+    router.push('/');
+    router.refresh();
+  };
+
+  const isLoggedIn = !!user;
+  const userEmail = user?.email || '';
+  // TODO: Implement admin role checking with Supabase user metadata or database
   const isAdmin = false;
-  const userEmail: string = '';
 
   return (
     <nav data-testid="nav" className="w-full flex items-center justify-between px-8 py-6">
@@ -74,10 +106,7 @@ export default function AuthNav() {
             {/* Sign Out button */}
             <button
               data-testid="nav-signout"
-              onClick={() => {
-                // TODO: Implement sign out with Supabase
-                console.log('Sign out clicked');
-              }}
+              onClick={handleSignOut}
               className="text-sm text-zinc-700 hover:text-zinc-900 transition-colors"
             >
               Sign Out
