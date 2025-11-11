@@ -14,7 +14,6 @@ import Link from 'next/link'
 export default function SignUpPage() {
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
-  const [confirmPassword, setConfirmPassword] = useState('')
   const [error, setError] = useState('')
   const [loading, setLoading] = useState(false)
   const router = useRouter()
@@ -23,11 +22,6 @@ export default function SignUpPage() {
   const handleSignUp = async (e: React.FormEvent) => {
     e.preventDefault()
     setError('')
-
-    if (password !== confirmPassword) {
-      setError('Passwords do not match')
-      return
-    }
 
     if (password.length < 6) {
       setError('Password must be at least 6 characters')
@@ -92,19 +86,6 @@ export default function SignUpPage() {
                 onChange={(e) => setPassword(e.target.value)}
                 required
                 data-testid="signup-password"
-              />
-            </div>
-
-            <div className="space-y-2">
-              <Label htmlFor="confirmPassword">Confirm Password</Label>
-              <Input
-                id="confirmPassword"
-                type="password"
-                placeholder="Re-enter your password"
-                value={confirmPassword}
-                onChange={(e) => setConfirmPassword(e.target.value)}
-                required
-                data-testid="signup-confirm-password"
               />
             </div>
 
