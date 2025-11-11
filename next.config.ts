@@ -10,6 +10,8 @@ const nextConfig: NextConfig = {
   turbopack: {
     root: ROOT, // absolute path to your repo root
   },
+  // Enable standalone output for Docker
+  output: 'standalone',
 };
 
 export default nextConfig;
