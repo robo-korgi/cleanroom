@@ -47,27 +47,42 @@ export default function AuthNav() {
       <Link
         href="/"
         data-testid="nav-logo"
-        className="text-2xl no-underline hover:no-underline"
+        className="text-2xl no-underline hover:no-underline cursor-pointer"
       >
         ✨
       </Link>
 
-      {/* Auth State Navigation */}
+      {/* Navigation Links */}
       <div className="flex gap-6 items-center">
+        {/* Always visible gallery links */}
+        <Link
+          href="/components"
+          className="text-sm text-zinc-700 hover:text-zinc-900 transition-colors cursor-pointer"
+        >
+          Components
+        </Link>
+        <Link
+          href="/blocks"
+          className="text-sm text-zinc-700 hover:text-zinc-900 transition-colors cursor-pointer"
+        >
+          Blocks
+        </Link>
+
+        {/* Auth State Navigation */}
         {!isLoggedIn ? (
           <>
             {/* Logged-out state */}
             <Link
               href="/signin"
               data-testid="nav-signin"
-              className="text-sm text-zinc-700 hover:text-zinc-900 transition-colors"
+              className="text-sm text-zinc-700 hover:text-zinc-900 transition-colors cursor-pointer"
             >
               Sign In
             </Link>
             <Link
               href="/signup"
               data-testid="nav-signup"
-              className="text-sm text-zinc-700 hover:text-zinc-900 transition-colors"
+              className="text-sm text-zinc-700 hover:text-zinc-900 transition-colors cursor-pointer"
             >
               Sign Up
             </Link>
@@ -97,7 +112,7 @@ export default function AuthNav() {
               <Link
                 href="/admin"
                 data-testid="nav-admin"
-                className="text-sm text-zinc-700 hover:text-zinc-900 transition-colors"
+                className="text-sm text-zinc-700 hover:text-zinc-900 transition-colors cursor-pointer"
               >
                 Admin
               </Link>
@@ -107,7 +122,7 @@ export default function AuthNav() {
             <button
               data-testid="nav-signout"
               onClick={handleSignOut}
-              className="text-sm text-zinc-700 hover:text-zinc-900 transition-colors"
+              className="text-sm text-zinc-700 hover:text-zinc-900 transition-colors cursor-pointer"
             >
               Sign Out
             </button>
