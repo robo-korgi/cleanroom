@@ -10,7 +10,7 @@ export default function AuthNav() {
   const userEmail: string = '';
 
   return (
-    <nav data-testid="nav" className="w-full flex items-center justify-between px-8 py-6 border-b border-zinc-200">
+    <nav data-testid="nav" className="w-full flex items-center justify-between px-8 py-6">
       {/* Logo / Home */}
       <Link
         href="/"
