@@ -76,9 +76,10 @@ echo "📋 Step 4/7: Saving current production state..."
 echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
 
 # Get current production deployment URL
-PREV_DEPLOYMENT=$(vercel ls --prod 2>/dev/null | grep "cleanroom.website" | head -1 | awk '{print $2}')
+# Use '|| true' to prevent pipefail from exiting if no deployment found
+PREV_DEPLOYMENT=$(vercel ls cleanroom.website --prod 2>/dev/null | head -2 | tail -1 || true)
 
-if [[ -z "$PREV_DEPLOYMENT" ]]; then
+if [[ -z "$PREV_DEPLOYMENT" || "$PREV_DEPLOYMENT" == "Vercel CLI"* ]]; then
   echo "⚠️  Warning: Could not find previous production deployment"
   echo "   Rollback will not be available if deployment fails"
   PREV_DEPLOYMENT="none"
