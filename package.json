@@ -22,7 +22,7 @@
     "test:ui": "playwright test --ui",
     "test:headed": "playwright test --headed",
     "login": "npx vercel login",
-    "deploy": "npx vercel --prod"
+    "deploy": "./scripts/deploy-prod.sh"
   },
   "dependencies": {
     "@radix-ui/react-checkbox": "^1.3.3",
