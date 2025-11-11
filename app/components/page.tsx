@@ -1,7 +1,6 @@
 "use client"
 
 import { useState } from "react"
-import SimpleNav from "@/components/blocks/simple-nav"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
@@ -33,8 +32,7 @@ export default function ComponentsPage() {
   const [showPassword, setShowPassword] = useState(false)
 
   return (
-    <div className="min-h-screen bg-muted/50">
-      <SimpleNav />
+    <div className="min-h-screen">
       <div className="mx-auto max-w-7xl px-8 py-12">
         <h1 className="mb-8 text-4xl font-bold">Components</h1>
 
